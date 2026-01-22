@@ -7,3 +7,5 @@
 
 ### ros2 lifecycle set /collision_monitor configure
 ### ros2 lifecycle set /collision_monitor activate
+
+<img width="887" height="92" alt="image" src="https://github.com/user-attachments/assets/3a78a61a-8c5a-47d3-baaa-aedb3cb58741" />
