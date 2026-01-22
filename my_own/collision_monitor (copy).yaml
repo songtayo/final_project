@@ -1,0 +1,37 @@
+collision_monitor:
+  ros__parameters:
+    use_sim_time: False # 실물 로봇이므로 False로 수정했습니다.
+    base_frame_id: "base_footprint"
+    odom_frame_id: "odom" # "base_footprint" # "odom"
+    cmd_vel_in_topic: "cmd_vel_filtered"
+    cmd_vel_out_topic: "cmd_vel"
+    state_topic: "collision_monitor_state"
+    transform_tolerance: 0.2
+    source_timeout: 5.0
+    stop_pub_timeout: 2.0
+    
+    observation_sources: ["scan"]
+    scan:
+      type: "scan"
+      topic: "/scan"
+    
+    polygons: ["StopPolygon", "SlowdownPolygon"]
+
+    StopPolygon:
+      type: "polygon"
+      # [핵심 수정] 범위를 전방 0.2m, 후방 0.05m로 줄여 본체 간섭을 최소화했습니다.
+      # [x_front, y_left, x_front, y_right, x_back, y_right, x_back, y_left]
+      # points: [0.2, 0.15, 0.2, -0.15, -0.1, -0.15, -0.1, 0.15]
+      points: [0.3, 0.2, 0.3, -0.2, -0.1, -0.2, -0.1, 0.2]
+      action_type: "stop"
+      min_points: 5 # 점 5개 이상일 때만 정지 (Lidar 노이즈로 인한 급정거 방지)
+      visualize: True
+
+    SlowdownPolygon:
+      type: "polygon"
+      # 감속 범위도 조금 더 실용적으로 전방 0.45m 수준으로 조정했습니다.
+      points: [0.45, 0.25, 0.45, -0.25, -0.15, -0.25, -0.15, 0.25]
+      action_type: "slowdown"
+      slowdown_ratio: 0.5
+      min_points: 3
+      visualize: True
